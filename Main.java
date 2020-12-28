@@ -4,7 +4,7 @@ class Main {
   public static void main(String[] args) {
     Scanner scan = new Scanner(System.in);
     String userInput;
-    Atm atm = new Atm();
+    ATM atm = new ATM();
 
     clearScreen();
     

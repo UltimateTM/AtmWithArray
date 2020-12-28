@@ -33,9 +33,10 @@ public class ATM {
     System.out.println("**************************************************************");
 
     input = scan.next();
+    scan.nextLine();
 
 
-    while (isValid) {
+    while (isValid = true) {
       if (input.equalsIgnoreCase("1")) {
         Main.clearScreen();
         isValid = true;
@@ -61,8 +62,8 @@ public class ATM {
     System.out.println("Current Total Account Balance : $" + checkingAccount[indexOfElement] + savingsAccount[indexOfElement]);
     System.out.println("Checkings : $" + checkingAccount[indexOfElement] + "\t Savings : $" + savingsAccount[indexOfElement]);
     System.out.println("[1] for Deposit \t [2] for Withdrawal \t [3] for FastCash\n");
-    if (bankAdministrator == true) {
-      System.out.println("[4] to exit \t [5] to logout and return to the logic screen \t [6] for bank settings");
+    if (bankAdministrator = true) {
+      System.out.println("[4] to exit \t [5] to logout and return to the logic screen \t [6] for bank settings \n");
     } else {
       System.out.println("[4] to exit \t [5] to logout and return to the logic screen");
     }
@@ -70,16 +71,28 @@ public class ATM {
 
     choice = scan.next();
 
-    while(isValid) {
+    while(!isValid) {
       if (choice.equalsIgnoreCase("1")) {
         isValid = true;
-        deposit();
+        try {
+          deposit();
+        } catch (InterruptedException e) {
+          System.out.println("no");
+        }
       } else if (choice.equalsIgnoreCase("2")) {
         isValid = true;
-        withdrawal();
+        try {
+          withdrawal();
+        } catch (InterruptedException e) {
+          System.out.println("no");
+        }
       } else if (choice.equalsIgnoreCase("3")) {
         isValid = true;
-        fastCash();
+        try {
+          fastCash();
+        } catch (InterruptedException e) {
+          System.out.println("no");
+        }
       } else if (choice.equalsIgnoreCase("4")) {
         isValid = true;
         System.exit(0);
@@ -87,7 +100,7 @@ public class ATM {
         isValid = true;
         Main.clearScreen();
         login();
-      } else if (choice.equalsIgnoreCase("6") && bankAdministrator == true){
+      } else if (bankAdministrator = true && choice.equalsIgnoreCase("6")){
         isValid = true;
         Main.clearScreen();
         settings();
@@ -118,55 +131,60 @@ public class ATM {
     } else {
       int i = number_of_accounts;
 
-      System.out.println("Enter a name for this account");
-      name = scan.next();
-      name = acct_name[i];
-      Main.clearScreen();
+      System.out.println("Enter a name for this account ");
+      name = scan.nextLine();
+      acct_name[i] = name;
+     
 
-      System.out.println("Enter a 4 digit pin for this account");
+      System.out.println("\nEnter a 4 digit pin for this account ");
       userInput = scan.nextInt();
-      userInput = pin[i];
-      Main.clearScreen();
+      scan.nextLine();
+      pin[i] = userInput;
+      
 
-      System.out.println("Checking Account Balance :");
+      System.out.println("\nChecking Account Balance : ");
       userInput = scan.nextInt();
-      userInput = checkingAccount[i];
-      Main.clearScreen();
+      scan.nextLine();
+      checkingAccount[i] = userInput;
+      
 
-      System.out.println("Savings Accounts Balance :");
+      System.out.println("\nSavings Accounts Balance :");
       userInput = scan.nextInt();
-      userInput = savingsAccount[i];
+      scan.nextLine();
+      savingsAccount[i] = userInput;
+
       Main.clearScreen();
 
       number_of_accounts++;
     }
+
+    login();
     
   }
 
   public void verification() {
-    boolean isVerified = false;
+    boolean found = false;
     System.out.println("Please enter your user name");
-    name = scan.next();
-    Main.clearScreen();
-
-    while(isVerified) {
+    name = scan.nextLine();
+    System.out.println();
+    
+    while(found = true) {
       for (int i = 0; i < array_length; i++) {
-        if (name.equalsIgnoreCase(acct_name[i])) {
-          System.out.println("\nWelcome " + acct_name[i]);
-          indexOfElement = i;
-          if (i = 0) {
-            bankAdministrator = true;
-          }
-          isVerified = true;
+        if (acct_name[i].equals(name)) {
+          found = true; 
           break;
         } else {
           System.out.println("\nSorry, we do not recognize that account, please enter another name");
-          name = scan.next();
+          name = scan.nextLine();
+          scan.nextLine();
         }
       }
+      break;
     }
 
-    pinVerification();
+    if (found) {
+      pinVerification();
+    } 
 
   }
 
@@ -175,13 +193,14 @@ public class ATM {
     System.out.println("Please enter your 4 digit pin for this account");
     userInput = scan.nextInt();
 
-    while(isVerified){
-      for (int i = 1; i < array_length; i++) {
+    while(!isVerified){
+      for (int i = 0; i < array_length; i++) {
         int invalidAttempts = 0;
         
         if (userInput == pin[i] && i == indexOfElement) {
           System.out.println("Pin verified");
           isVerified = true;
+          Main.clearScreen();
           home();
           break;
         } else {
@@ -209,25 +228,24 @@ public class ATM {
     
   }
 
-  public void deposit() {
+  public void deposit() throws InterruptedException {
     boolean isValid = false;
     boolean isSavings = false;
     boolean isCheckings = false;
+    String input;
     String choice = "";
 
-    while (isValid) {
+    while (!isValid) {
       System.out.println("Please choose an account:\nCheckings [C] || Savings [S]");
       input = scan.next();
 
       if (input.equalsIgnoreCase("c") || input.equalsIgnoreCase("Checkings")) {
       choice = "CHECKINGS";
       isCheckings = true;
-      currentBalance = checkingAccount[indexOfElement];
       isValid = true;
       } else if (input.equalsIgnoreCase("s") || input.equalsIgnoreCase("Savings")) {
       choice = "SAVINGS";
       isSavings = true;
-      currentBalance = savingsAccount[indexOfElement];
       isValid = true;
       } else {
         System.out.println("Please enter either [C] or [S]");
@@ -238,8 +256,8 @@ public class ATM {
     System.out.println("Please enter the amount you wish to deposit into your " + choice + " account.");
     depositAmount = scan.nextInt();
 
-    while (depositAmount > maxAmount) {
-      System.out.println("You cannot deposit an amount greater than $" + maxAmount + " in one session.");
+    while (depositAmount > max_amount) {
+      System.out.println("You cannot deposit an amount greater than $" + max_amount + " in one session.");
       System.out.println("Please enter a new deposit amount.");
       depositAmount = scan.nextInt();
     }
@@ -258,8 +276,8 @@ public class ATM {
     }
        
     System.out.println("Transaction complete!");
-    System.out.println("Updated Checking account balance: $" + checkingAccountBalance);
-    System.out.println("Updated Savings account balance: $" + savingAccountBalance);
+    System.out.println("Updated Checking account balance: $" + checkingAccount[indexOfElement]);
+    System.out.println("Updated Savings account balance: $" + savingsAccount[indexOfElement]);
     System.out.println("Enter any key to continue.");
 
     scan.next();
@@ -277,7 +295,7 @@ public class ATM {
     String choice = "";
     int currentBalance = 0;
 
-    while (isValid) {
+    while (!isValid) {
       System.out.println("Please choose an account:\nCheckings [C] || Savings [S]");
       input = scan.next();
 
@@ -337,24 +355,28 @@ public class ATM {
 
 
   public void fastCash() throws InterruptedException {
-    booleans isValid = false;
+    boolean isValid = false;
     boolean isCheckings = false;
-    booleans isSavings = false;
+    boolean isSavings = false;
     String choice = "";
     String input;
 
-    while (!isValid){
+    while (!isValid) {
       System.out.println("Please choose an account:\nCheckings [C] || Savings [S]");
       input = scan.next();
 
-      if (input.equalsIgnoreCase("C") || input.equalsIgnoreCase("S") || input.equalsIgnoreCase("Checkings") || input.equalsIgnoreCase("Savings")){
-        isValid = true;
-      }
-    } 
-
-    if (input.equalsIgnoreCase("C") || input.equalsIgnoreCase("Checkings")) {
+      if (input.equalsIgnoreCase("c") || input.equalsIgnoreCase("Checkings")) {
       choice = "CHECKINGS";
       isCheckings = true;
+      isValid = true;
+      } else if (input.equalsIgnoreCase("s") || input.equalsIgnoreCase("Savings")) {
+      choice = "SAVINGS";
+      isSavings = true;
+      isValid = true;
+      } else {
+        System.out.println("Please enter either [C] or [S]");
+        input = scan.next();
+      }
     }
 
     System.out.println("Please input a number for the amount of cash you would like to withdrawal from your " + choice + " account");
