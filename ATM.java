@@ -66,19 +66,21 @@ public class ATM {
         }
       } else {
         System.out.println("Please enter only [1] or [2]");
+        input = scan.nextLine();
       }
     }
 
   }
 
   public void home(){
-    invalidAttempts = 0;
     String choice;
     boolean isValid = false;
     int total = checkingAccount.get(indexOfElement) + savingsAccount.get(indexOfElement);
     if (bankAdministrator == true) {
+      invalidAttempts = 0;
       administratorHome();
     } else {
+      invalidAttempts = 0;
       System.out.println("************************************************************************************************");
       System.out.println("\nWelcome to your account, " + acct_name.get(indexOfElement) + "\n");
       System.out.println("Current Total Account Balance : $" + total);
@@ -535,10 +537,10 @@ public class ATM {
   public void settings() {
     boolean isVerified = false;
     String input;
-    System.out.println("************************************************************************************************");
+    System.out.println("***************************************************************************************************************");
     System.out.println("\n\t\t\t\t\t\t\t\t\tWelcome Administrator\n");
     System.out.println("[1] to view list of users \t\t\t [2] to change the max deposit/withdraw amount \t\t\t [3] to return home\n");
-    System.out.println("************************************************************************************************");
+    System.out.println("***************************************************************************************************************");
     input = scan.nextLine();
 
     while (isVerified = true) {
