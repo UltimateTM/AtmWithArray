@@ -72,6 +72,7 @@ public class ATM {
   }
 
   public void home(){
+    invalidAttempts = 0;
     String choice;
     boolean isValid = false;
     int total = checkingAccount.get(indexOfElement) + savingsAccount.get(indexOfElement);
