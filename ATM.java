@@ -6,7 +6,6 @@ import java.util.ArrayList;
 public class ATM {
   Scanner scan = new Scanner(System.in);
 
-  private final int array_length = 30;
   private int userInput;
   private String name;
   private int number_of_accounts = 1;
@@ -16,11 +15,14 @@ public class ATM {
   private static int max_amount = 500; 
   private int withdrawalAmount;
   private int depositAmount;
+  private int invalidAttempts = 0;
+  
 
-  int[] checkingAccount = new int[array_length];
-  int[] savingsAccount = new int[array_length];
-  int[] pin = new int[array_length];
-  String[] acct_name = new String[array_length];
+  ArrayList<Integer> checkingAccount = new ArrayList<Integer>();
+  ArrayList<Integer> savingsAccount = new ArrayList<Integer>();
+  ArrayList<Integer> pin = new ArrayList<Integer>();
+  ArrayList<String> acct_name = new ArrayList<String>();
+
 
   public void login() {
     defaultAccount();
@@ -32,21 +34,36 @@ public class ATM {
     Art.polishFlag();
     System.out.println("Press [1] to create a new account ");
     System.out.println("Press [2] to login to an existing account \n");
+    if (invalidAttempts == 2) {
+      System.out.println("You have entered [2] false entries. You have [2] attempts remaining.\n");
+    } else if (invalidAttempts == 3) {
+      System.out.println("You have entered [3] false entries. You have [1] attemp remaining.\n");
+    } else if (invalidAttempts == 4) {
+      Main.clearScreen();
+      System.out.println("Your session has been terminated");
+      System.exit(0);
+    }
     System.out.println("**************************************************************");
 
-    input = scan.next();
-    scan.nextLine();
-
+    input = scan.nextLine();
 
     while (isValid = true) {
       if (input.equalsIgnoreCase("1")) {
         Main.clearScreen();
         isValid = true;
-        accountCreation();
+        try {
+          accountCreation();
+        } catch (InterruptedException e){
+          System.out.println("No");
+        }
       } else if (input.equalsIgnoreCase("2")) {
         Main.clearScreen();
         isValid = true;
-        verification();
+        try {
+          verification();
+        } catch (InterruptedException e) {
+          System.out.println("no");
+        }
       } else {
         System.out.println("Please enter only [1] or [2]");
       }
@@ -57,21 +74,19 @@ public class ATM {
   public void home(){
     String choice;
     boolean isValid = false;
-    int[] temp_arry = new int[array_length];
-    int total = checkingAccount[indexOfElement] + savingsAccount[indexOfElement];
-    System.out.println("************************************************************************************************");
-    System.out.println("\nWelcome to your account, " + acct_name[indexOfElement] + "\n");
-    System.out.println("Current Total Account Balance : $" + total);
-    System.out.println("Checkings : $" + checkingAccount[indexOfElement] + "\t Savings : $" + savingsAccount[indexOfElement]);
-    System.out.println("[1] for Deposit \t [2] for Withdrawal \t [3] for FastCash\n");
+    int total = checkingAccount.get(indexOfElement) + savingsAccount.get(indexOfElement);
     if (bankAdministrator == true) {
-      System.out.println("[4] to exit \t [5] to logout and return to the logic screen \t [6] for bank settings \n");
+      administratorHome();
     } else {
-      System.out.println("[4] to exit \t [5] to logout and return to the logic screen");
+      System.out.println("************************************************************************************************");
+      System.out.println("\nWelcome to your account, " + acct_name.get(indexOfElement) + "\n");
+      System.out.println("Current Total Account Balance : $" + total);
+      System.out.println("Checkings : $" + checkingAccount.get(indexOfElement) + "\t Savings : $" + savingsAccount.get(indexOfElement) + "\n");
+      System.out.println("[1] for Deposit \t[2] for Withdrawal \t\t\t[3] for FastCash\n");
+      System.out.println("[4] to exit \t \t[5] to logout and return\n \t \t \t \t \t \tto the login screen\n");
+      System.out.println("************************************************************************************************");
     }
-    System.out.println("************************************************************************************************");
-
-    choice = scan.next();
+    choice = scan.nextLine();
 
     while(!isValid) {
       if (choice.equalsIgnoreCase("1")) {
@@ -102,7 +117,7 @@ public class ATM {
         isValid = true;
         Main.clearScreen();
         login();
-      } else if (choice.equalsIgnoreCase("6")){
+      } else if (choice.equalsIgnoreCase("6") && bankAdministrator == true){
         isValid = true;
         Main.clearScreen();
         settings();
@@ -115,55 +130,60 @@ public class ATM {
   }
 
   public void displayInformation() {
+    int total = checkingAccount.get(indexOfElement) + savingsAccount.get(indexOfElement);
     System.out.println("**************************************************************");
-    System.out.println("Current Total Account Balance : $" + checkingAccount[indexOfElement] + savingsAccount[indexOfElement]);
-    System.out.println("Checkings : $" + checkingAccount[indexOfElement] + "\t Savings : $" + savingsAccount[indexOfElement]);
+    System.out.println("\nCurrent Total Account Balance : $" + total + "\n");
+    System.out.println("\nCheckings : $" + checkingAccount.get(indexOfElement) + "\t Savings : $" + savingsAccount.get(indexOfElement) + "\n");
     System.out.println("**************************************************************");
   }
 
 
-  public void accountCreation() {
+  public void accountCreation() throws InterruptedException {
     String input;
+    
+    System.out.println("============================");
+    System.out.println("\t Account Creation");
+    System.out.println("============================");
+    int i = number_of_accounts;
 
-    if (number_of_accounts == array_length) {
-      System.out.println("The maximum amount of accounts has been created");
-      System.out.println("Press any key to return to the login screen");
-      input = scan.next();
-      verification();
-    } else {
-      System.out.println("============================");
-      System.out.println("\t Account Creation");
-      System.out.println("============================");
-      int i = number_of_accounts;
+    System.out.println("Enter a Username :");
+    acct_name.add(scan.nextLine());
 
-      System.out.println("Enter a name for this account ");
-      acct_name[i] = scan.nextLine();
-     
+    System.out.println("\nEnter a PIN :");
+    pin.add(scan.nextInt());
+    scan.nextLine();
+    
 
-      System.out.println("\nEnter a 4 digit pin for this account ");
-      pin[i] = scan.nextInt();
-      scan.nextLine();
-      
+    System.out.println("\nChecking Account Balance : ");
+    checkingAccount.add(scan.nextInt());
+    scan.nextLine();
 
-      System.out.println("\nChecking Account Balance : ");
-      checkingAccount[i] = scan.nextInt();
-      scan.nextLine();
-      
+    System.out.println("\nSavings Accounts Balance :");
+    savingsAccount.add(scan.nextInt());
+    scan.nextLine();
 
-      System.out.println("\nSavings Accounts Balance :");
-      savingsAccount[i] = scan.nextInt();
-      scan.nextLine();
+    Main.clearScreen();
 
-      Main.clearScreen();
+    number_of_accounts++;
 
-      number_of_accounts++;
+    System.out.println("Creating account....");
+    for (int j = 0; j < (int) (Math.random() * 10) + 1; j++) {
+      Thread.sleep(1000);
+      System.out.println(".");
     }
+
+    for (int k = 0; k < 2; k++) {
+      Thread.sleep(1000);
+      System.out.println("Account created!");
+    }
+
+    Main.clearScreen();
 
     login();
     
   }
 
-  public void verification() {
+  public void verification() throws InterruptedException {
     boolean found = false;
     boolean isVerified = false;
     System.out.println("============================");
@@ -173,33 +193,52 @@ public class ATM {
     name = scan.nextLine();
     System.out.println();
     
-    for (int i = 0; i < array_length; i++) {
-      if (acct_name[i].equalsIgnoreCase(name)) {
+    for (int i = 0; i < acct_name.size(); i++) {
+      if (acct_name.get(i).equalsIgnoreCase(name)) {
         indexOfElement = i;
         found = true;
+        if (i == 0) {
+          bankAdministrator = true;
+        }
         break;
 
       } 
     }
 
+    
     if (found) {
-      pinVerification();
+      try {
+       pinVerification(); 
+      } catch (InterruptedException e) {
+        System.out.println("No");
+      }
     } else {
+      invalidAttempts++;
+      Main.clearScreen();
+      System.out.println("Sorry, we do not recognize this account\nReturning you to the login screen");
+      for (int i = 0; i < (int) (Math.random() * 10) + 1; i++) {
+      Thread.sleep(1000);
+      System.out.println(".");
+      }
+      Main.clearScreen();
       login();
     }
     
+    
+    
   }
 
-  public void pinVerification() {
+  public void pinVerification() throws InterruptedException {
     boolean isVerified = false;
     boolean found = false;
     int invalidAttempts = 0;
     System.out.println("Please enter your PIN");
     userInput = scan.nextInt();
+    scan.nextLine();
     System.out.println();
 
-    for (int i = 0; i < array_length; i++) {
-      if (userInput == pin[i] && indexOfElement == i) {
+    for (int i = 0; i < pin.size(); i++) {
+      if (userInput == pin.get(i) && indexOfElement == i) {
         found = true;
         break;
       } 
@@ -208,23 +247,31 @@ public class ATM {
     if (found == true) {
       Main.clearScreen();
       home();
-    } else if (found == false){
+    } else {
       invalidAttempts++;
-      switch (invalidAttempts) { 
-        case 1:
-        System.out.println("You have input the incorrect pin, please input the correct 4 digit pin number for this account");
-        System.out.println("WARNING: You have 3 attempts left.");
-        break;
-        case 2:
-        System.out.println("WARNING: You have 2 attempts left.");
-        break;
-        case 3:
-        System.out.println("WARNING: You have 1 attempt left.");
-        System.out.println("Failure to enter the correct pin will result in session termination.");
-        case 4:
-        System.out.println("Session terminated.");
-        System.exit(0);
+      Main.clearScreen();
+      System.out.println("Sorry, you have entered an incorrect PIN\nReturning you to the login screen");
+      for (int i = 0; i < (int) (Math.random() * 10) + 1; i++) {
+      Thread.sleep(1000);
+      System.out.println(".");
       }
+      Main.clearScreen();
+      login();
+      // switch (invalidAttempts) { 
+      //   case 1:
+      //   System.out.println("You have input the incorrect pin, please input the correct 4 digit pin number for this account");
+      //   System.out.println("WARNING: You have 3 attempts left.");
+      //   break;
+      //   case 2:
+      //   System.out.println("WARNING: You have 2 attempts left.");
+      //   break;
+      //   case 3:
+      //   System.out.println("WARNING: You have 1 attempt left.");
+      //   System.out.println("Failure to enter the correct pin will result in session termination.");
+      //   case 4:
+      //   System.out.println("Session terminated.");
+      //   System.exit(0);
+      // }
     }
     
     
@@ -239,6 +286,8 @@ public class ATM {
     String choice = "";
 
     while (!isValid) {
+      Main.clearScreen();
+      displayInformation();
       System.out.println("Please choose an account:\nCheckings [C] || Savings [S]");
       input = scan.next();
 
@@ -266,9 +315,9 @@ public class ATM {
     }
 
     if (isCheckings) {
-      checkingAccount[indexOfElement] += depositAmount;
+      checkingAccount.set(indexOfElement, checkingAccount.get(indexOfElement) + depositAmount);
     } else if (isSavings) {
-      savingsAccount[indexOfElement] += depositAmount;
+      savingsAccount.set(indexOfElement, savingsAccount.get(indexOfElement) + depositAmount);
     }
 
     System.out.println("Please wait while we process this change.");
@@ -279,8 +328,8 @@ public class ATM {
     }
        
     System.out.println("Transaction complete!");
-    System.out.println("Updated Checking account balance: $" + checkingAccount[indexOfElement]);
-    System.out.println("Updated Savings account balance: $" + savingsAccount[indexOfElement]);
+    System.out.println("Updated Checking account balance: $" + checkingAccount.get(indexOfElement));
+    System.out.println("Updated Savings account balance: $" + savingsAccount.get(indexOfElement));
     System.out.println("Enter any key to continue.");
 
     scan.next();
@@ -299,18 +348,20 @@ public class ATM {
     int currentBalance = 0;
 
     while (!isValid) {
+      Main.clearScreen();
+      displayInformation();
       System.out.println("Please choose an account:\nCheckings [C] || Savings [S]");
       input = scan.next();
 
       if (input.equalsIgnoreCase("c") || input.equalsIgnoreCase("Checkings")) {
       choice = "CHECKINGS";
       isCheckings = true;
-      currentBalance = checkingAccount[indexOfElement];
+      currentBalance = checkingAccount.get(indexOfElement);
       isValid = true;
       } else if (input.equalsIgnoreCase("s") || input.equalsIgnoreCase("Savings")) {
       choice = "SAVINGS";
       isSavings = true;
-      currentBalance = savingsAccount[indexOfElement];
+      currentBalance = savingsAccount.get(indexOfElement);
       isValid = true;
       } else {
         System.out.println("Please enter either [C] or [S]");
@@ -320,11 +371,13 @@ public class ATM {
 
     System.out.println("How many times would you like to withdraw from your " + choice + " account?\n(In $20 increments)");
     withdrawalAmount = scan.nextInt() * 20;
+    scan.nextLine();
 
     while (withdrawalAmount > currentBalance) {
       System.out.println("You attempted to withdraw [$" + withdrawalAmount + "] \n You currently do not have enought money in your " + choice + " account");
       System.out.println("Please enter a new number.");
       withdrawalAmount = scan.nextInt() * 20;
+      scan.nextLine();
     }
 
     while (withdrawalAmount > max_amount) { // User can only withdrawal 500 per session
@@ -332,15 +385,16 @@ public class ATM {
       System.out.println("You attempted to withdrawal $" + withdrawalAmount);
       System.out.println("Please enter a new amount :");
       withdrawalAmount = scan.nextInt() * 20;
+      scan.nextLine();
     } 
 
     if (withdrawalAmount <= currentBalance && isCheckings){
-      checkingAccount[indexOfElement] -= withdrawalAmount;
+      checkingAccount.set(indexOfElement, checkingAccount.get(indexOfElement) - withdrawalAmount);
     }                                                               // determines which account to remove money from
     else if (withdrawalAmount <= currentBalance && isSavings){
-      savingsAccount[indexOfElement] -= withdrawalAmount;
+      savingsAccount.set(indexOfElement, savingsAccount.get(indexOfElement) - withdrawalAmount);
     }
-
+    System.out.println("You have withdrawn [$" + withdrawalAmount + "]");
     System.out.println("Please wait while we process this change.");
 
     for (int i = 0; i < (int) (Math.random() * 10) + 1; i++) {
@@ -349,8 +403,8 @@ public class ATM {
     }
 
     System.out.println("Transaction complete!");
-    System.out.println("Updated Checking account balance: $" + checkingAccount[indexOfElement]);
-    System.out.println("Updated Savings account balance: $" + savingsAccount[indexOfElement]); // Updates the account balance
+    System.out.println("Updated Checking account balance: $" + checkingAccount.get(indexOfElement));
+    System.out.println("Updated Savings account balance: $" + savingsAccount.get(indexOfElement)); // Updates the account balance
     System.out.println("Enter any key to continue.");
 
     home();
@@ -365,6 +419,8 @@ public class ATM {
     String input;
 
     while (!isValid) {
+      Main.clearScreen();
+      displayInformation();
       System.out.println("Please choose an account:\nCheckings [C] || Savings [S]");
       input = scan.next();
 
@@ -403,37 +459,37 @@ public class ATM {
     if (isCheckings) { 
       switch (userInput) {
         case 1:
-        checkingAccount[indexOfElement] -= 20;
+        checkingAccount.set(indexOfElement, checkingAccount.get(indexOfElement) - 20);
         break;
         case 2:
-        checkingAccount[indexOfElement] -= 40;
+        checkingAccount.set(indexOfElement, checkingAccount.get(indexOfElement) - 40);
         break;
         case 3:
-        checkingAccount[indexOfElement] -= 60;
+        checkingAccount.set(indexOfElement, checkingAccount.get(indexOfElement) - 60);
         break;
         case 4:
-        checkingAccount[indexOfElement] -= 80;
+        checkingAccount.set(indexOfElement, checkingAccount.get(indexOfElement) - 80);
         break;
         case 5:
-        checkingAccount[indexOfElement] -= 100;
+        checkingAccount.set(indexOfElement, checkingAccount.get(indexOfElement) - 100);
         break;
       }
-    } else if (isSavings) {                           
+    } else if (isSavings) {                          
       switch (userInput) {
         case 1:
-        savingsAccount[indexOfElement] -= 20;
+        savingsAccount.set(indexOfElement, savingsAccount.get(indexOfElement) - 20);
         break;
         case 2:
-        savingsAccount[indexOfElement] -= 40;
+        savingsAccount.set(indexOfElement, savingsAccount.get(indexOfElement) - 40);
         break;
         case 3:
-        savingsAccount[indexOfElement] -= 60;
+        savingsAccount.set(indexOfElement, savingsAccount.get(indexOfElement) - 60);
         break;
         case 4:
-        savingsAccount[indexOfElement] -= 80;
+        savingsAccount.set(indexOfElement, savingsAccount.get(indexOfElement) - 80);
         break;
         case 5:
-        savingsAccount[indexOfElement] -= 100;
+        savingsAccount.set(indexOfElement, savingsAccount.get(indexOfElement) - 100);
         break;
       }
     }
@@ -446,8 +502,8 @@ public class ATM {
     }
 
     System.out.println("Transaction complete!");
-    System.out.println("Updated Checking account balance: $" + checkingAccount[indexOfElement]);
-    System.out.println("Updated Savings account balance: $" + savingsAccount[indexOfElement]);
+    System.out.println("Updated Checking account balance: $" + checkingAccount.get(indexOfElement));
+    System.out.println("Updated Savings account balance: $" + savingsAccount.get(indexOfElement));
     System.out.println("Enter any key to continue.");
 
     scan.next();
@@ -458,15 +514,78 @@ public class ATM {
   }
 
   public void defaultAccount() {
-    pin[0] = 1234;
-    acct_name[0] = "Bank";
-    checkingAccount[0] = 500000;
-    savingsAccount[0] = 500000;
+    pin.add(1234);
+    acct_name.add("Bank");
+    checkingAccount.add(500000);
+    savingsAccount.add(500000);
+  }
+
+  public void administratorHome() {
+    int total = checkingAccount.get(indexOfElement) + savingsAccount.get(indexOfElement);
+    System.out.println("************************************************************************************************");
+    System.out.println("\n\t\t\t\t\t\t\t\t\tWelcome Administrator\n");
+    System.out.println("Current Total Account Balance : $" + total);
+    System.out.println("Checkings : $" + checkingAccount.get(indexOfElement) + "\t Savings : $" + savingsAccount.get(indexOfElement) + "\n");
+    System.out.println("[1] for Deposit \t[2] for Withdrawal \t\t\t\t\t\t\t\t\t[3] for FastCash\n");
+    System.out.println("[4] to Exit \t \t[5] to Logout and Return to the Login Screen \t \t[6] for Bank Settings \n");
+    System.out.println("************************************************************************************************");
   }
 
   public void settings() {
-    System.out.println("**************************************************************");
-    System.out.println("Welcome Administrator");
-    System.out.println("**************************************************************");
+    boolean isVerified = false;
+    String input;
+    System.out.println("************************************************************************************************");
+    System.out.println("\n\t\t\t\t\t\t\t\t\tWelcome Administrator\n");
+    System.out.println("[1] to view list of users \t\t\t [2] to change the max deposit/withdraw amount \t\t\t [3] to return home\n");
+    System.out.println("************************************************************************************************");
+    input = scan.nextLine();
+
+    while (isVerified = true) {
+      if (input.equalsIgnoreCase("1")) {
+        System.out.println("User name :");
+        for (String x : acct_name) {
+          System.out.println(x);
+        }
+        System.out.println();
+        System.out.println("PIN numbers :");
+        for (int x : pin) {
+          System.out.println(x);
+        }
+        System.out.println();
+        System.out.println("Checking Account Balances :");
+        for (int x : checkingAccount) {
+          System.out.println(x);
+        }
+        System.out.println();
+        System.out.println("Savings Account Balances :");
+        for (int x : savingsAccount) {
+          System.out.println(x);
+        }
+        System.out.println();
+        System.out.println("Press any key to continue");
+        scan.nextLine();
+        Main.clearScreen();
+        settings();
+        isVerified = true;
+      } else if (input.equalsIgnoreCase("2")) {
+        System.out.println("The current maximum deposit/withdraw amount is [" + max_amount + "]");
+        System.out.println("What would you like to change this amount to?");
+        max_amount = scan.nextInt();
+        scan.nextLine();
+        System.out.println("The max amount is now [" + max_amount + "] \nEnter any key to continue");
+        scan.nextLine();
+        Main.clearScreen();
+        settings();
+        isVerified = true;
+      } else if (input.equalsIgnoreCase("3")) {
+        Main.clearScreen();
+        isVerified = true;
+        home();
+      } else {
+        System.out.println("Only options [1] - [3] are available");
+        input = scan.nextLine();
+      }
+    }
+   
   }
 }
