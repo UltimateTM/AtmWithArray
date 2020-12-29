@@ -260,21 +260,6 @@ public class ATM {
       }
       Main.clearScreen();
       login();
-      // switch (invalidAttempts) { 
-      //   case 1:
-      //   System.out.println("You have input the incorrect pin, please input the correct 4 digit pin number for this account");
-      //   System.out.println("WARNING: You have 3 attempts left.");
-      //   break;
-      //   case 2:
-      //   System.out.println("WARNING: You have 2 attempts left.");
-      //   break;
-      //   case 3:
-      //   System.out.println("WARNING: You have 1 attempt left.");
-      //   System.out.println("Failure to enter the correct pin will result in session termination.");
-      //   case 4:
-      //   System.out.println("Session terminated.");
-      //   System.exit(0);
-      // }
     }
     
     
@@ -335,7 +320,7 @@ public class ATM {
     System.out.println("Updated Savings account balance: $" + savingsAccount.get(indexOfElement));
     System.out.println("Enter any key to continue.");
 
-    scan.next();
+    scan.nextLine();
     Main.clearScreen();
 
     home();
@@ -409,6 +394,9 @@ public class ATM {
     System.out.println("Updated Checking account balance: $" + checkingAccount.get(indexOfElement));
     System.out.println("Updated Savings account balance: $" + savingsAccount.get(indexOfElement)); // Updates the account balance
     System.out.println("Enter any key to continue.");
+
+    scan.nextLine();
+    Main.clearScreen();
 
     home();
   }
@@ -509,7 +497,7 @@ public class ATM {
     System.out.println("Updated Savings account balance: $" + savingsAccount.get(indexOfElement));
     System.out.println("Enter any key to continue.");
 
-    scan.next();
+    scan.nextLine();
     Main.clearScreen();
 
     home();
