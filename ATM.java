@@ -1,5 +1,6 @@
 import java.util.Scanner;
 import java.lang.Thread;
+import java.util.ArrayList;
 
 
 public class ATM {
@@ -25,6 +26,7 @@ public class ATM {
     defaultAccount();
     boolean isValid = false;
     String input;
+
     System.out.println("**************************************************************");
     System.out.println("Welcome to the Mars branch of the Polish National Bank!");
     Art.polishFlag();
@@ -47,7 +49,6 @@ public class ATM {
         verification();
       } else {
         System.out.println("Please enter only [1] or [2]");
-        input = scan.next();
       }
     }
 
@@ -56,18 +57,19 @@ public class ATM {
   public void home(){
     String choice;
     boolean isValid = false;
-
-    System.out.println("**************************************************************");
+    int[] temp_arry = new int[array_length];
+    int total = checkingAccount[indexOfElement] + savingsAccount[indexOfElement];
+    System.out.println("************************************************************************************************");
     System.out.println("\nWelcome to your account, " + acct_name[indexOfElement] + "\n");
-    System.out.println("Current Total Account Balance : $" + checkingAccount[indexOfElement] + savingsAccount[indexOfElement]);
+    System.out.println("Current Total Account Balance : $" + total);
     System.out.println("Checkings : $" + checkingAccount[indexOfElement] + "\t Savings : $" + savingsAccount[indexOfElement]);
     System.out.println("[1] for Deposit \t [2] for Withdrawal \t [3] for FastCash\n");
-    if (bankAdministrator = true) {
+    if (bankAdministrator == true) {
       System.out.println("[4] to exit \t [5] to logout and return to the logic screen \t [6] for bank settings \n");
     } else {
       System.out.println("[4] to exit \t [5] to logout and return to the logic screen");
     }
-    System.out.println("**************************************************************");
+    System.out.println("************************************************************************************************");
 
     choice = scan.next();
 
@@ -100,13 +102,13 @@ public class ATM {
         isValid = true;
         Main.clearScreen();
         login();
-      } else if (bankAdministrator = true && choice.equalsIgnoreCase("6")){
+      } else if (choice.equalsIgnoreCase("6")){
         isValid = true;
         Main.clearScreen();
         settings();
       } else {
         System.out.println("Only choices [1] - [5] are available");
-        choice = scan.next();
+        choice = scan.nextLine();
       }
     }
 
@@ -129,29 +131,28 @@ public class ATM {
       input = scan.next();
       verification();
     } else {
+      System.out.println("============================");
+      System.out.println("\t Account Creation");
+      System.out.println("============================");
       int i = number_of_accounts;
 
       System.out.println("Enter a name for this account ");
-      name = scan.nextLine();
-      acct_name[i] = name;
+      acct_name[i] = scan.nextLine();
      
 
       System.out.println("\nEnter a 4 digit pin for this account ");
-      userInput = scan.nextInt();
+      pin[i] = scan.nextInt();
       scan.nextLine();
-      pin[i] = userInput;
       
 
       System.out.println("\nChecking Account Balance : ");
-      userInput = scan.nextInt();
+      checkingAccount[i] = scan.nextInt();
       scan.nextLine();
-      checkingAccount[i] = userInput;
       
 
       System.out.println("\nSavings Accounts Balance :");
-      userInput = scan.nextInt();
+      savingsAccount[i] = scan.nextInt();
       scan.nextLine();
-      savingsAccount[i] = userInput;
 
       Main.clearScreen();
 
@@ -164,67 +165,69 @@ public class ATM {
 
   public void verification() {
     boolean found = false;
+    boolean isVerified = false;
+    System.out.println("============================");
+    System.out.println("\t User Verification");
+    System.out.println("============================");
     System.out.println("Please enter your user name");
     name = scan.nextLine();
     System.out.println();
     
-    while(found = true) {
-      for (int i = 0; i < array_length; i++) {
-        if (acct_name[i].equals(name)) {
-          found = true; 
-          break;
-        } else {
-          System.out.println("\nSorry, we do not recognize that account, please enter another name");
-          name = scan.nextLine();
-          scan.nextLine();
-        }
-      }
-      break;
+    for (int i = 0; i < array_length; i++) {
+      if (acct_name[i].equalsIgnoreCase(name)) {
+        indexOfElement = i;
+        found = true;
+        break;
+
+      } 
     }
 
     if (found) {
       pinVerification();
-    } 
-
+    } else {
+      login();
+    }
+    
   }
 
   public void pinVerification() {
     boolean isVerified = false;
-    System.out.println("Please enter your 4 digit pin for this account");
+    boolean found = false;
+    int invalidAttempts = 0;
+    System.out.println("Please enter your PIN");
     userInput = scan.nextInt();
+    System.out.println();
 
-    while(!isVerified){
-      for (int i = 0; i < array_length; i++) {
-        int invalidAttempts = 0;
-        
-        if (userInput == pin[i] && i == indexOfElement) {
-          System.out.println("Pin verified");
-          isVerified = true;
-          Main.clearScreen();
-          home();
-          break;
-        } else {
-          invalidAttempts++;
-
-          switch (invalidAttempts) { 
-            case 1:
-            System.out.println("You have input the incorrect pin, please input the correct 4 digit pin number for this account");
-            System.out.println("WARNING: You have 3 attempts left.");
-            break;
-            case 2:
-            System.out.println("WARNING: You have 2 attempts left.");
-            break;
-            case 3:
-            System.out.println("WARNING: You have 1 attempt left.");
-            System.out.println("Failure to enter the correct pin will result in session termination.");
-            case 4:
-            System.out.println("Session terminated.");
-            System.exit(0);
-          }
-
-        }
+    for (int i = 0; i < array_length; i++) {
+      if (userInput == pin[i] && indexOfElement == i) {
+        found = true;
+        break;
+      } 
+    } 
+      
+    if (found == true) {
+      Main.clearScreen();
+      home();
+    } else if (found == false){
+      invalidAttempts++;
+      switch (invalidAttempts) { 
+        case 1:
+        System.out.println("You have input the incorrect pin, please input the correct 4 digit pin number for this account");
+        System.out.println("WARNING: You have 3 attempts left.");
+        break;
+        case 2:
+        System.out.println("WARNING: You have 2 attempts left.");
+        break;
+        case 3:
+        System.out.println("WARNING: You have 1 attempt left.");
+        System.out.println("Failure to enter the correct pin will result in session termination.");
+        case 4:
+        System.out.println("Session terminated.");
+        System.exit(0);
       }
     }
+    
+    
     
   }
 
@@ -456,7 +459,7 @@ public class ATM {
 
   public void defaultAccount() {
     pin[0] = 1234;
-    acct_name[0] = "Bank Administrator";
+    acct_name[0] = "Bank";
     checkingAccount[0] = 500000;
     savingsAccount[0] = 500000;
   }
