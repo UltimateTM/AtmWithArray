@@ -1,7 +1,7 @@
 import java.util.Scanner;
 import java.lang.Thread;
 import java.util.ArrayList;
-
+import java.util.Set;
 
 public class ATM {
   Scanner scan = new Scanner(System.in);
@@ -10,6 +10,7 @@ public class ATM {
   private String name;
   private int number_of_accounts = 1;
   private int indexOfElement;
+  private int indexOfAccounts;
 
   private boolean bankAdministrator = false;
   private static int max_amount = 500; 
@@ -157,7 +158,11 @@ public class ATM {
     int i = number_of_accounts;
 
     System.out.println("Enter a Username :");
-    acct_name.add(scan.nextLine());
+    try {
+      duplicateCheck();
+    } catch (InterruptedException e) {
+      System.out.println("No");
+    }
 
     System.out.println("\nEnter a PIN :");
     pin.add(errorCatch());
@@ -599,4 +604,37 @@ public class ATM {
     return userInput;
 
   }
+
+  public void duplicateCheck() throws InterruptedException {
+    boolean isValid = false;
+    boolean isDuplicate = false;
+    int duplicateIndex = 0; 
+
+    name = scan.nextLine();
+    acct_name.add(name);
+
+    for (int i = 0; i < acct_name.size(); i++ ) {
+      for (int j = i + 1; j < acct_name.size(); j++) {
+        if (j != i && acct_name.get(i).equalsIgnoreCase(acct_name.get(j))) {
+          isDuplicate = true;
+          duplicateIndex = j;
+        }
+      }
+    }
+
+    if (isDuplicate == true) {
+      System.out.println("Username already taken. Returning you to the login screen......");
+      for (int k = 0; k < 4; k++) {
+        Thread.sleep(1000);
+      }
+      acct_name.remove(duplicateIndex);
+      Main.clearScreen();
+      login();
+    } else {
+      isValid = true;
+      isDuplicate = false;
+    } 
+    
+  }
+
 }
