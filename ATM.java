@@ -26,6 +26,7 @@ public class ATM {
 
   public void login() {
     defaultAccount();
+    bankAdministrator = false;
     boolean isValid = false;
     String input;
 
@@ -33,7 +34,8 @@ public class ATM {
     System.out.println("Welcome to the Mars branch of the Polish National Bank!");
     Art.polishFlag();
     System.out.println("Press [1] to create a new account ");
-    System.out.println("Press [2] to login to an existing account \n");
+    System.out.println("Press [2] to login to an existing account");
+    System.out.println("Press [3] to leave\n");
     if (invalidAttempts == 2) {
       System.out.println("You have entered [2] false entries. You have [2] attempts remaining.\n");
     } else if (invalidAttempts == 3) {
@@ -47,7 +49,7 @@ public class ATM {
 
     input = scan.nextLine();
 
-    while (isValid = true) {
+    while (isValid == false) {
       if (input.equalsIgnoreCase("1")) {
         Main.clearScreen();
         isValid = true;
@@ -64,6 +66,10 @@ public class ATM {
         } catch (InterruptedException e) {
           System.out.println("no");
         }
+      } else if (input.equalsIgnoreCase("3")){
+        Main.clearScreen();
+        System.out.println("Goodbye!");
+        System.exit(0);
       } else {
         System.out.println("Please enter only [1] or [2]");
         input = scan.nextLine();
@@ -143,7 +149,8 @@ public class ATM {
 
   public void accountCreation() throws InterruptedException {
     String input;
-    
+    boolean isValid = false;
+
     System.out.println("============================");
     System.out.println("\t Account Creation");
     System.out.println("============================");
@@ -153,17 +160,13 @@ public class ATM {
     acct_name.add(scan.nextLine());
 
     System.out.println("\nEnter a PIN :");
-    pin.add(scan.nextInt());
-    scan.nextLine();
-    
+    pin.add(errorCatch());
 
     System.out.println("\nChecking Account Balance : ");
-    checkingAccount.add(scan.nextInt());
-    scan.nextLine();
+    checkingAccount.add(errorCatch());
 
     System.out.println("\nSavings Accounts Balance :");
-    savingsAccount.add(scan.nextInt());
-    scan.nextLine();
+    savingsAccount.add(errorCatch());
 
     Main.clearScreen();
 
@@ -260,21 +263,6 @@ public class ATM {
       }
       Main.clearScreen();
       login();
-      // switch (invalidAttempts) { 
-      //   case 1:
-      //   System.out.println("You have input the incorrect pin, please input the correct 4 digit pin number for this account");
-      //   System.out.println("WARNING: You have 3 attempts left.");
-      //   break;
-      //   case 2:
-      //   System.out.println("WARNING: You have 2 attempts left.");
-      //   break;
-      //   case 3:
-      //   System.out.println("WARNING: You have 1 attempt left.");
-      //   System.out.println("Failure to enter the correct pin will result in session termination.");
-      //   case 4:
-      //   System.out.println("Session terminated.");
-      //   System.exit(0);
-      // }
     }
     
     
@@ -309,12 +297,12 @@ public class ATM {
     }
 
     System.out.println("Please enter the amount you wish to deposit into your " + choice + " account.");
-    depositAmount = scan.nextInt();
+    depositAmount = errorCatch();
 
     while (depositAmount > max_amount) {
       System.out.println("You cannot deposit an amount greater than $" + max_amount + " in one session.");
       System.out.println("Please enter a new deposit amount.");
-      depositAmount = scan.nextInt();
+      depositAmount = errorCatch();
     }
 
     if (isCheckings) {
@@ -335,7 +323,7 @@ public class ATM {
     System.out.println("Updated Savings account balance: $" + savingsAccount.get(indexOfElement));
     System.out.println("Enter any key to continue.");
 
-    scan.next();
+    scan.nextLine();
     Main.clearScreen();
 
     home();
@@ -373,22 +361,19 @@ public class ATM {
     }
 
     System.out.println("How many times would you like to withdraw from your " + choice + " account?\n(In $20 increments)");
-    withdrawalAmount = scan.nextInt() * 20;
-    scan.nextLine();
+    withdrawalAmount = errorCatch() * 20;
 
     while (withdrawalAmount > currentBalance) {
       System.out.println("You attempted to withdraw [$" + withdrawalAmount + "] \n You currently do not have enought money in your " + choice + " account");
       System.out.println("Please enter a new number.");
-      withdrawalAmount = scan.nextInt() * 20;
-      scan.nextLine();
+      withdrawalAmount = errorCatch() * 20;
     }
 
     while (withdrawalAmount > max_amount) { // User can only withdrawal 500 per session
       System.out.println("Sorry, you can only withdraw $" + max_amount + " per session.");
       System.out.println("You attempted to withdrawal $" + withdrawalAmount);
       System.out.println("Please enter a new amount :");
-      withdrawalAmount = scan.nextInt() * 20;
-      scan.nextLine();
+      withdrawalAmount = errorCatch() * 20;
     } 
 
     if (withdrawalAmount <= currentBalance && isCheckings){
@@ -409,6 +394,9 @@ public class ATM {
     System.out.println("Updated Checking account balance: $" + checkingAccount.get(indexOfElement));
     System.out.println("Updated Savings account balance: $" + savingsAccount.get(indexOfElement)); // Updates the account balance
     System.out.println("Enter any key to continue.");
+
+    scan.nextLine();
+    Main.clearScreen();
 
     home();
   }
@@ -509,7 +497,7 @@ public class ATM {
     System.out.println("Updated Savings account balance: $" + savingsAccount.get(indexOfElement));
     System.out.println("Enter any key to continue.");
 
-    scan.next();
+    scan.nextLine();
     Main.clearScreen();
 
     home();
@@ -573,7 +561,7 @@ public class ATM {
       } else if (input.equalsIgnoreCase("2")) {
         System.out.println("The current maximum deposit/withdraw amount is [" + max_amount + "]");
         System.out.println("What would you like to change this amount to?");
-        max_amount = scan.nextInt();
+        max_amount = errorCatch();
         scan.nextLine();
         System.out.println("The max amount is now [" + max_amount + "] \nEnter any key to continue");
         scan.nextLine();
@@ -590,5 +578,25 @@ public class ATM {
       }
     }
    
+  }
+
+
+  public int errorCatch() {
+    boolean isValid = false;
+
+    while (isValid == false) {
+      if (scan.hasNextInt()) {
+        userInput = scan.nextInt();
+        scan.nextLine();
+      } else {
+        System.out.println("Please enter only integers with no decimals");
+        scan.next();
+        continue;
+      }
+      isValid = true;
+    }
+
+    return userInput;
+
   }
 }
