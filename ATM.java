@@ -605,17 +605,16 @@ public class ATM {
 
   }
 
-  public void duplicateCheck() throws InterruptedException {
-    boolean isValid = false;
+  public void duplicateCheck() throws InterruptedException { 
+    int duplicateIndex = 0;
     boolean isDuplicate = false;
-    int duplicateIndex = 0; 
 
     name = scan.nextLine();
     acct_name.add(name);
 
     for (int i = 0; i < acct_name.size(); i++ ) {
       for (int j = i + 1; j < acct_name.size(); j++) {
-        if (j != i && acct_name.get(i).equalsIgnoreCase(acct_name.get(j))) {
+        if (acct_name.get(i).equalsIgnoreCase(acct_name.get(j)) && acct_name.get(j).equalsIgnoreCase(name)) {
           isDuplicate = true;
           duplicateIndex = j;
         }
@@ -630,10 +629,7 @@ public class ATM {
       acct_name.remove(duplicateIndex);
       Main.clearScreen();
       login();
-    } else {
-      isValid = true;
-      isDuplicate = false;
-    } 
+    }
     
   }
 
