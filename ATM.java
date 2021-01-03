@@ -56,8 +56,8 @@ public class ATM {
         isValid = true;
         try {
           accountCreation();
-        } catch (InterruptedException e){
-          System.out.println("No");
+        } catch (InterruptedException e) {
+          System.out.println("Something happened");
         }
       } else if (input.equalsIgnoreCase("2")) {
         Main.clearScreen();
@@ -65,7 +65,7 @@ public class ATM {
         try {
           verification();
         } catch (InterruptedException e) {
-          System.out.println("no");
+          System.out.println("Something happened");
         }
       } else if (input.equalsIgnoreCase("3")){
         Main.clearScreen();
@@ -88,12 +88,20 @@ public class ATM {
       administratorHome();
     } else {
       invalidAttempts = 0;
+      // System.out.println("************************************************************************************************");
+      // System.out.println("\n\t\t\t\t\t\t\t\t\tWelcome to your account, " + acct_name.get(indexOfElement) + "\n");
+      // System.out.println("Current Total Account Balance : $" + total);
+      // System.out.println("Checkings : $" + checkingAccount.get(indexOfElement) + "\t Savings : $" + savingsAccount.get(indexOfElement) + "\n");
+      // System.out.println("[1] for Deposit \t[2] for Withdrawal \t\t\t[3] for FastCash\n");
+      // System.out.println("[4] to exit \t \t[5] to logout and return\n \t \t \t \t \t \tto the login screen\n");
+      // System.out.println("************************************************************************************************");
+
       System.out.println("************************************************************************************************");
-      System.out.println("\nWelcome to your account, " + acct_name.get(indexOfElement) + "\n");
-      System.out.println("Current Total Account Balance : $" + total);
-      System.out.println("Checkings : $" + checkingAccount.get(indexOfElement) + "\t Savings : $" + savingsAccount.get(indexOfElement) + "\n");
-      System.out.println("[1] for Deposit \t[2] for Withdrawal \t\t\t[3] for FastCash\n");
-      System.out.println("[4] to exit \t \t[5] to logout and return\n \t \t \t \t \t \tto the login screen\n");
+      System.out.println("\n\t\t\t\t\t\t\t\tWelcome to your account, " + acct_name.get(indexOfElement) + "\n");
+      System.out.println("\t\t\t\t\t\t\tCheckings : $" + checkingAccount.get(indexOfElement) + "\t Savings : $" + savingsAccount.get(indexOfElement) + "\n");
+      System.out.println("\t\t\t\t\t\t\t\tTotal Account Balance : $" + total + "\n");
+      System.out.println("[1] for Deposit\t\t\t\t\t\t[2] for Withdrawal \t\t\t\t\t\t[3] for FastCash\n");
+      System.out.println("[4] to exit\t\t\t\t\t\t\t[5] to logout and return\n \t\t\t\t\t\t\t\t\t\tto the login screen\n");
       System.out.println("************************************************************************************************");
     }
     choice = scan.nextLine();
@@ -104,24 +112,26 @@ public class ATM {
         try {
           deposit();
         } catch (InterruptedException e) {
-          System.out.println("no");
+          System.out.println("Something happened");
         }
       } else if (choice.equalsIgnoreCase("2")) {
         isValid = true;
         try {
           withdrawal();
         } catch (InterruptedException e) {
-          System.out.println("no");
+          System.out.println("Something happened");
         }
       } else if (choice.equalsIgnoreCase("3")) {
         isValid = true;
         try {
           fastCash();
         } catch (InterruptedException e) {
-          System.out.println("no");
+          System.out.println("Something happened");
         }
       } else if (choice.equalsIgnoreCase("4")) {
         isValid = true;
+        Main.clearScreen();
+        System.out.println("Goodbye!");
         System.exit(0);
       } else if (choice.equalsIgnoreCase("5")) {
         isValid = true;
@@ -152,40 +162,51 @@ public class ATM {
     String input;
     boolean isValid = false;
 
-    System.out.println("============================");
+    // slowPrint("============================\n \t Account Creation \n============================\n");
+    slowPrint("============================\n");
     System.out.println("\t Account Creation");
-    System.out.println("============================");
+    slowPrint("============================\n");
+    pause(1);
     int i = number_of_accounts;
 
-    System.out.println("Enter a Username :");
-    try {
-      duplicateCheck();
-    } catch (InterruptedException e) {
-      System.out.println("No");
-    }
+    slowPrint("Enter a username :\n");
+    duplicateCheck();
+    System.out.println();
 
-    System.out.println("\nEnter a PIN :");
+    slowPrint("Enter a PIN :\n");
     pin.add(errorCatch());
+    System.out.println();
 
-    System.out.println("\nChecking Account Balance : ");
+    slowPrint("Enter your Checking balance :\n");
     checkingAccount.add(errorCatch());
+    System.out.println();
 
-    System.out.println("\nSavings Accounts Balance :");
+    slowPrint("Enter your Savings balance :\n");
     savingsAccount.add(errorCatch());
+    System.out.println();
 
     Main.clearScreen();
 
     number_of_accounts++;
 
-    System.out.println("Creating account....");
-    for (int j = 0; j < (int) (Math.random() * 10) + 1; j++) {
-      Thread.sleep(1000);
-      System.out.println(".");
+    slowPrint("Creating account . . .\n");
+    for (int j = 0; j < (int) (Math.random() * 10) + 3; j++) {
+      try {
+        Thread.sleep(1000);
+        System.out.println(".");
+      } catch (InterruptedException e) {
+        System.out.println("Something happened");
+      }
+      
     }
 
     for (int k = 0; k < 2; k++) {
-      Thread.sleep(1000);
-      System.out.println("Account created!");
+      try {
+        Thread.sleep(1000);
+        System.out.println("Account created!");
+      } catch (InterruptedException e) {
+        System.out.println("Something happened");
+      }
     }
 
     Main.clearScreen();
@@ -197,10 +218,11 @@ public class ATM {
   public void verification() throws InterruptedException {
     boolean found = false;
     boolean isVerified = false;
-    System.out.println("============================");
+    slowPrint("============================\n");
     System.out.println("\t User Verification");
-    System.out.println("============================");
-    System.out.println("Please enter your user name");
+    slowPrint("============================\n");
+    pause(1);
+    slowPrint("Please enter your username :\n");
     name = scan.nextLine();
     System.out.println();
     
@@ -218,19 +240,12 @@ public class ATM {
 
     
     if (found) {
-      try {
-       pinVerification(); 
-      } catch (InterruptedException e) {
-        System.out.println("No");
-      }
+      pinVerification(); 
     } else {
       invalidAttempts++;
       Main.clearScreen();
-      System.out.println("Sorry, we do not recognize this account\nReturning you to the login screen");
-      for (int i = 0; i < (int) (Math.random() * 10) + 1; i++) {
-      Thread.sleep(1000);
-      System.out.println(".");
-      }
+      System.out.println("Sorry, we do not recognize this account\nReturning you to the login screen . . .");
+      pause(3);
       Main.clearScreen();
       login();
     }
@@ -243,9 +258,8 @@ public class ATM {
     boolean isVerified = false;
     boolean found = false;
     int invalidAttempts = 0;
-    System.out.println("Please enter your PIN");
-    userInput = scan.nextInt();
-    scan.nextLine();
+    slowPrint("Please enter your PIN :\n");
+    userInput = errorCatch();
     System.out.println();
 
     for (int i = 0; i < pin.size(); i++) {
@@ -256,16 +270,15 @@ public class ATM {
     } 
       
     if (found == true) {
+      slowPrint("Identity verified, sending to home screen");
+      pause(2);
       Main.clearScreen();
       home();
     } else {
       invalidAttempts++;
       Main.clearScreen();
-      System.out.println("Sorry, you have entered an incorrect PIN\nReturning you to the login screen");
-      for (int i = 0; i < (int) (Math.random() * 10) + 1; i++) {
-      Thread.sleep(1000);
-      System.out.println(".");
-      }
+      System.out.println("Sorry, you have entered an incorrect PIN\nReturning you to the login screen . . .");
+      pause(3);
       Main.clearScreen();
       login();
     }
@@ -284,7 +297,8 @@ public class ATM {
     while (!isValid) {
       Main.clearScreen();
       displayInformation();
-      System.out.println("Please choose an account:\nCheckings [C] || Savings [S]");
+      pause(1);
+      slowPrint("Please choose an account:\nCheckings [C] || Savings [S]\n");
       input = scan.next();
 
       if (input.equalsIgnoreCase("c") || input.equalsIgnoreCase("Checkings")) {
@@ -296,18 +310,23 @@ public class ATM {
       isSavings = true;
       isValid = true;
       } else {
-        System.out.println("Please enter either [C] or [S]");
+        slowPrint("Please enter either [C] or [S]\n");
         input = scan.next();
       }
     }
 
-    System.out.println("Please enter the amount you wish to deposit into your " + choice + " account.");
+    slowPrint("\nPlease enter the amount you wish to deposit into your " + choice + " account.\n");
     depositAmount = errorCatch();
 
     while (depositAmount > max_amount) {
-      System.out.println("You cannot deposit an amount greater than $" + max_amount + " in one session.");
-      System.out.println("Please enter a new deposit amount.");
+      slowPrint("\nYou cannot deposit an amount greater than $" + max_amount + " in one session.\n");
+      slowPrint("Please enter a new deposit amount.\n");
       depositAmount = errorCatch();
+    }
+
+    while (depositAmount < 0) {
+      slowPrint("\nPlease enter a number greater than or equal to [0]\n");
+      withdrawalAmount = errorCatch() * 20;
     }
 
     if (isCheckings) {
@@ -316,17 +335,21 @@ public class ATM {
       savingsAccount.set(indexOfElement, savingsAccount.get(indexOfElement) + depositAmount);
     }
 
-    System.out.println("Please wait while we process this change.");
+    slowPrint("\nPlease wait while we process this change\n");
 
-    for (int i = 0; i < (int) (Math.random() * 10) + 1; i++) {
-      Thread.sleep(1000);
-      System.out.println(".");
+    for (int i = 0; i < (int) (Math.random() * 10) + 3; i++) {
+      try {
+        Thread.sleep(1000);
+        System.out.println(".");
+      } catch (InterruptedException e){
+        System.out.println("Something happened");
+      }
     }
-       
-    System.out.println("Transaction complete!");
-    System.out.println("Updated Checking account balance: $" + checkingAccount.get(indexOfElement));
-    System.out.println("Updated Savings account balance: $" + savingsAccount.get(indexOfElement));
-    System.out.println("Enter any key to continue.");
+      
+    slowPrint("Transaction complete!\n");
+    slowPrint("Updated Checking account balance: $" + checkingAccount.get(indexOfElement) + "\n");
+    slowPrint("Updated Savings account balance: $" + savingsAccount.get(indexOfElement) + "\n");
+    slowPrint("Press [Enter] to continue\n");
 
     scan.nextLine();
     Main.clearScreen();
@@ -346,8 +369,9 @@ public class ATM {
     while (!isValid) {
       Main.clearScreen();
       displayInformation();
-      System.out.println("Please choose an account:\nCheckings [C] || Savings [S]");
-      input = scan.next();
+      pause(1);
+      slowPrint("Please choose an account:\nCheckings [C] || Savings [S]\n");
+      input = scan.nextLine();
 
       if (input.equalsIgnoreCase("c") || input.equalsIgnoreCase("Checkings")) {
       choice = "CHECKINGS";
@@ -360,24 +384,29 @@ public class ATM {
       currentBalance = savingsAccount.get(indexOfElement);
       isValid = true;
       } else {
-        System.out.println("Please enter either [C] or [S]");
-        input = scan.next();
+        slowPrint("Please enter either [C] or [S]\n");
+        input = scan.nextLine();
       }
     }
 
-    System.out.println("How many times would you like to withdraw from your " + choice + " account?\n(In $20 increments)");
+    slowPrint("\nHow many times would you like to withdraw from your " + choice + " account?\n(In $20 increments)\n");
     withdrawalAmount = errorCatch() * 20;
 
     while (withdrawalAmount > currentBalance) {
-      System.out.println("You attempted to withdraw [$" + withdrawalAmount + "] \n You currently do not have enought money in your " + choice + " account");
-      System.out.println("Please enter a new number.");
+      slowPrint("\nYou attempted to withdraw [$" + withdrawalAmount + "] \n You currently do not have enought money in your " + choice + " account\n");
+      slowPrint("Please enter a new number\n");
+      withdrawalAmount = errorCatch() * 20;
+    }
+
+    while (withdrawalAmount < 0) {
+      slowPrint("\nPlease enter a number greater than or equal to [0]\n");
       withdrawalAmount = errorCatch() * 20;
     }
 
     while (withdrawalAmount > max_amount) { // User can only withdrawal 500 per session
-      System.out.println("Sorry, you can only withdraw $" + max_amount + " per session.");
-      System.out.println("You attempted to withdrawal $" + withdrawalAmount);
-      System.out.println("Please enter a new amount :");
+      slowPrint("\nSorry, you can only withdraw $" + max_amount + " per session\n");
+      slowPrint("You attempted to withdrawal $" + withdrawalAmount + "\n");
+      slowPrint("Please enter a new amount\n");
       withdrawalAmount = errorCatch() * 20;
     } 
 
@@ -387,18 +416,23 @@ public class ATM {
     else if (withdrawalAmount <= currentBalance && isSavings){
       savingsAccount.set(indexOfElement, savingsAccount.get(indexOfElement) - withdrawalAmount);
     }
-    System.out.println("You have withdrawn [$" + withdrawalAmount + "]");
-    System.out.println("Please wait while we process this change.");
+    slowPrint("\nYou have withdrawn [$" + withdrawalAmount + "]\n");
+    slowPrint("Please wait while we process this change\n");
 
-    for (int i = 0; i < (int) (Math.random() * 10) + 1; i++) {
-      Thread.sleep(1000); // 1 second                         // depending on the number generated, the for loop goes to that number and prints out a period every second
-      System.out.println(".");
+    for (int i = 0; i < (int) (Math.random() * 10) + 3; i++) {
+      try {
+        Thread.sleep(1000); // 1 second                         
+        System.out.println(".");
+      } catch (InterruptedException e) {
+        System.out.println("Something happened");
+      }
+      
     }
 
-    System.out.println("Transaction complete!");
-    System.out.println("Updated Checking account balance: $" + checkingAccount.get(indexOfElement));
-    System.out.println("Updated Savings account balance: $" + savingsAccount.get(indexOfElement)); // Updates the account balance
-    System.out.println("Enter any key to continue.");
+    slowPrint("Transaction complete!\n");
+    slowPrint("Updated Checking account balance: $" + checkingAccount.get(indexOfElement) + "\n");
+    slowPrint("Updated Savings account balance: $" + savingsAccount.get(indexOfElement) + "\n"); // Updates the account balance
+    slowPrint("Press [Enter] to continue\n");
 
     scan.nextLine();
     Main.clearScreen();
@@ -417,8 +451,9 @@ public class ATM {
     while (!isValid) {
       Main.clearScreen();
       displayInformation();
-      System.out.println("Please choose an account:\nCheckings [C] || Savings [S]");
-      input = scan.next();
+      pause(1);
+      slowPrint("Please choose an account:\nCheckings [C] || Savings [S]\n");
+      input = scan.nextLine();
 
       if (input.equalsIgnoreCase("c") || input.equalsIgnoreCase("Checkings")) {
       choice = "CHECKINGS";
@@ -429,78 +464,88 @@ public class ATM {
       isSavings = true;
       isValid = true;
       } else {
-        System.out.println("Please enter either [C] or [S]");
-        input = scan.next();
+        slowPrint("\nPlease enter either [C] or [S]\n");
+        input = scan.nextLine();
       }
     }
 
-    System.out.println("Please input a number for the amount of cash you would like to withdrawal from your " + choice + " account");
-    System.out.println("1 = $20");
-    System.out.println("2 = $40");
-    System.out.println("3 = $60"); 
-    System.out.println("4 = $80");
-    System.out.println("5 = $100");
-    userInput = scan.nextInt();
+    slowPrint("\nPlease input a number for the amount of cash you would like to withdrawal from your " + choice + " account\n");
+    slowPrint("[1] = $20\n");
+    slowPrint("[2] = $40\n");
+    slowPrint("[3] = $60\n"); 
+    slowPrint("[4] = $80\n");
+    slowPrint("[5] = $100\n");
+    userInput = errorCatch();
 
-    while(scan.hasNextInt() == false) {
-      System.out.println("Please enter a number only");
-      userInput = scan.nextInt();
-    }
-
-    while (userInput > 5) { 
-      System.out.println("Sorry, there are no fast cash amounts greater than \"5\". ");
-      userInput = scan.nextInt();
+    while (userInput > 5 || userInput < 1) { 
+      slowPrint("\nSorry, there are no fast cash amounts greater than [5] and less than [1]\n");
+      userInput = errorCatch();
     }
 
     if (isCheckings) { 
       switch (userInput) {
         case 1:
+        slowPrint("\nYou have withdrawn $20\n");
         checkingAccount.set(indexOfElement, checkingAccount.get(indexOfElement) - 20);
         break;
         case 2:
+        slowPrint("\nYou have withdrawn $40\n");
         checkingAccount.set(indexOfElement, checkingAccount.get(indexOfElement) - 40);
         break;
         case 3:
+        slowPrint("\nYou have withdrawn $60\n");
         checkingAccount.set(indexOfElement, checkingAccount.get(indexOfElement) - 60);
         break;
         case 4:
+        slowPrint("\nYou have withdrawn $80\n");
         checkingAccount.set(indexOfElement, checkingAccount.get(indexOfElement) - 80);
         break;
         case 5:
+        slowPrint("\nYou have withdrawn $100\n");
         checkingAccount.set(indexOfElement, checkingAccount.get(indexOfElement) - 100);
         break;
       }
     } else if (isSavings) {                          
       switch (userInput) {
         case 1:
+        slowPrint("\nYou have withdrawn $20\n");
         savingsAccount.set(indexOfElement, savingsAccount.get(indexOfElement) - 20);
         break;
         case 2:
+        slowPrint("\nYou have withdrawn $40\n");
         savingsAccount.set(indexOfElement, savingsAccount.get(indexOfElement) - 40);
         break;
         case 3:
+        slowPrint("\nYou have withdrawn $60\n");
         savingsAccount.set(indexOfElement, savingsAccount.get(indexOfElement) - 60);
         break;
         case 4:
+        slowPrint("\nYou have withdrawn $80\n");
         savingsAccount.set(indexOfElement, savingsAccount.get(indexOfElement) - 80);
         break;
         case 5:
+        slowPrint("\nYou have withdrawn $100\n");
         savingsAccount.set(indexOfElement, savingsAccount.get(indexOfElement) - 100);
         break;
       }
     }
 
-    System.out.println("Please wait while we process this change.");
+    slowPrint("\nPlease wait while we process this change\n");
 
-    for (int i = 0; i < (int) (Math.random() * 10) + 1; i++) {
-      Thread.sleep(1000);
-      System.out.println(".");
+    for (int i = 0; i < (int) (Math.random() * 10) + 3; i++) {
+      try {
+        Thread.sleep(1000);
+        System.out.println(".");
+      } catch (InterruptedException e) {
+        System.out.println("Something happened");
+      }
+      
     }
 
-    System.out.println("Transaction complete!");
-    System.out.println("Updated Checking account balance: $" + checkingAccount.get(indexOfElement));
-    System.out.println("Updated Savings account balance: $" + savingsAccount.get(indexOfElement));
-    System.out.println("Enter any key to continue.");
+    slowPrint("Transaction complete!\n");
+    slowPrint("Updated Checking account balance: $" + checkingAccount.get(indexOfElement) + "\n");
+    slowPrint("Updated Savings account balance: $" + savingsAccount.get(indexOfElement) + "\n");
+    slowPrint("Press [Enter] to continue\n");
 
     scan.nextLine();
     Main.clearScreen();
@@ -520,10 +565,11 @@ public class ATM {
     int total = checkingAccount.get(indexOfElement) + savingsAccount.get(indexOfElement);
     System.out.println("************************************************************************************************");
     System.out.println("\n\t\t\t\t\t\t\t\t\tWelcome Administrator\n");
-    System.out.println("Current Total Account Balance : $" + total);
-    System.out.println("Checkings : $" + checkingAccount.get(indexOfElement) + "\t Savings : $" + savingsAccount.get(indexOfElement) + "\n");
-    System.out.println("[1] for Deposit \t[2] for Withdrawal \t\t\t\t\t\t\t\t\t[3] for FastCash\n");
-    System.out.println("[4] to Exit \t \t[5] to Logout and Return to the Login Screen \t \t[6] for Bank Settings \n");
+    System.out.println("\t\t\t\t\t\t\tCheckings : $" + checkingAccount.get(indexOfElement) + "\t Savings : $" + savingsAccount.get(indexOfElement) + "\n");
+    System.out.println("\t\t\t\t\t\t\t\tTotal Account Balance : $" + total + "\n");
+    System.out.println("[1] for Deposit \t\t\t\t\t[2] for Withdrawal \t\t\t\t\t[3] for FastCash\n");
+    System.out.println("[4] to Exit \t\t\t\t\t\t[5] to Logout and Return \t\t\t[6] for Bank Settings");
+    System.out.println("\t\t\t\t\t\t\t\t\t\tto the Login Screen\n");
     System.out.println("************************************************************************************************");
   }
 
@@ -594,7 +640,7 @@ public class ATM {
         userInput = scan.nextInt();
         scan.nextLine();
       } else {
-        System.out.println("Please enter only integers with no decimals");
+        System.out.println("\nPlease enter only integers with no decimals");
         scan.next();
         continue;
       }
@@ -622,9 +668,13 @@ public class ATM {
     }
 
     if (isDuplicate == true) {
-      System.out.println("Username already taken. Returning you to the login screen......");
+      slowPrint("Username already taken. Returning you to the login screen . . .");
       for (int k = 0; k < 4; k++) {
-        Thread.sleep(1000);
+        try {
+          Thread.sleep(1000);
+        } catch (InterruptedException e) {
+          System.out.println("Something happened");
+        }
       }
       acct_name.remove(duplicateIndex);
       Main.clearScreen();
@@ -633,4 +683,29 @@ public class ATM {
     
   }
 
+  public static void slowPrint(String text) throws InterruptedException {
+    char[] chars = text.toCharArray();
+
+    for (int i = 0; i < chars.length; i++) {
+      System.out.print(chars[i]);
+      try {
+        Thread.sleep(10);
+      } catch (InterruptedException e) {
+        System.out.println("Something happened");
+      }
+    
+    }
+
+    chars = null;
+  }
+
+  public void pause(int amount) {
+    for (int i = 0; i < amount; i++) {
+      try {
+        Thread.sleep(1000);
+      } catch (InterruptedException e) {
+        System.out.println("Something happened");
+      }
+    }
+  }
 }
