@@ -10,7 +10,6 @@ public class ATM {
   private String name;
   private int number_of_accounts = 1;
   private int indexOfElement;
-  private int indexOfAccounts;
 
   private boolean bankAdministrator = false;
   private static int max_amount = 500; 
@@ -23,10 +22,9 @@ public class ATM {
   ArrayList<Integer> savingsAccount = new ArrayList<Integer>();
   ArrayList<Integer> pin = new ArrayList<Integer>();
   ArrayList<String> acct_name = new ArrayList<String>();
-
+  
 
   public void login() {
-    defaultAccount();
     bankAdministrator = false;
     boolean isValid = false;
     String input;
@@ -88,13 +86,7 @@ public class ATM {
       administratorHome();
     } else {
       invalidAttempts = 0;
-      // System.out.println("************************************************************************************************");
-      // System.out.println("\n\t\t\t\t\t\t\t\t\tWelcome to your account, " + acct_name.get(indexOfElement) + "\n");
-      // System.out.println("Current Total Account Balance : $" + total);
-      // System.out.println("Checkings : $" + checkingAccount.get(indexOfElement) + "\t Savings : $" + savingsAccount.get(indexOfElement) + "\n");
-      // System.out.println("[1] for Deposit \t[2] for Withdrawal \t\t\t[3] for FastCash\n");
-      // System.out.println("[4] to exit \t \t[5] to logout and return\n \t \t \t \t \t \tto the login screen\n");
-      // System.out.println("************************************************************************************************");
+      
 
       System.out.println("************************************************************************************************");
       System.out.println("\n\t\t\t\t\t\t\t\tWelcome to your account, " + acct_name.get(indexOfElement) + "\n");
@@ -163,9 +155,9 @@ public class ATM {
     boolean isValid = false;
 
     // slowPrint("============================\n \t Account Creation \n============================\n");
-    slowPrint("============================\n");
-    System.out.println("\t Account Creation");
-    slowPrint("============================\n");
+    slowPrint("=================================\n");
+    System.out.println("|\t\tAccount Creation\t\t|");
+    slowPrint("=================================\n");
     pause(1);
     int i = number_of_accounts;
 
@@ -178,11 +170,21 @@ public class ATM {
     System.out.println();
 
     slowPrint("Enter your Checking balance :\n");
-    checkingAccount.add(errorCatch());
+    userInput = errorCatch();
+    while (userInput < 1)  {
+      slowPrint("Please enter a value greater than [1]\n");
+      userInput = errorCatch();
+    }
+    checkingAccount.add(userInput);
     System.out.println();
 
     slowPrint("Enter your Savings balance :\n");
-    savingsAccount.add(errorCatch());
+    userInput = errorCatch();
+    while (userInput < 1)  {
+      slowPrint("Please enter a value greater than [1]\n");
+      userInput = errorCatch();
+    }
+    savingsAccount.add(userInput);
     System.out.println();
 
     Main.clearScreen();
@@ -218,9 +220,9 @@ public class ATM {
   public void verification() throws InterruptedException {
     boolean found = false;
     boolean isVerified = false;
-    slowPrint("============================\n");
-    System.out.println("\t User Verification");
-    slowPrint("============================\n");
+    slowPrint("=================================\n");
+    System.out.println("|\t\tUser Verification\t\t|");
+    slowPrint("=================================\n");
     pause(1);
     slowPrint("Please enter your username :\n");
     name = scan.nextLine();
@@ -335,6 +337,7 @@ public class ATM {
       savingsAccount.set(indexOfElement, savingsAccount.get(indexOfElement) + depositAmount);
     }
 
+    slowPrint("\nYou have deposited [$" + depositAmount + "]");
     slowPrint("\nPlease wait while we process this change\n");
 
     for (int i = 0; i < (int) (Math.random() * 10) + 3; i++) {
@@ -604,7 +607,7 @@ public class ATM {
           System.out.println(x);
         }
         System.out.println();
-        System.out.println("Press any key to continue");
+        System.out.println("Press [Enter] to continue");
         scan.nextLine();
         Main.clearScreen();
         settings();
@@ -614,7 +617,7 @@ public class ATM {
         System.out.println("What would you like to change this amount to?");
         max_amount = errorCatch();
         scan.nextLine();
-        System.out.println("The max amount is now [" + max_amount + "] \nEnter any key to continue");
+        System.out.println("The max amount is now [" + max_amount + "] \nPress [Enter] to continue");
         scan.nextLine();
         Main.clearScreen();
         settings();

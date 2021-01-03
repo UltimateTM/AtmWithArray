@@ -8,6 +8,7 @@ class Main {
 
     clearScreen();
     
+    atm.defaultAccount();
 
     atm.login();
     
